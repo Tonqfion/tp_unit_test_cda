@@ -19,7 +19,9 @@ public class Color {
         if (isNotCorrectIntColorValue(red)) {
             throw new IllegalArgumentException("Le paramètre pour la couleur rouge n'est pas correct");
         }
-        replaceSpecificHexColorValueWhenSettingIntColor(ColorIndex.RED, red);
+        if (hexValue != null) {
+            replaceSpecificHexColorValueWhenSettingIntColor(ColorIndex.RED, red);
+        }
         this.red = red;
     }
 
@@ -31,7 +33,9 @@ public class Color {
         if (isNotCorrectIntColorValue(green)) {
             throw new IllegalArgumentException("Le paramètre pour la couleur verte n'est pas correct");
         }
-        replaceSpecificHexColorValueWhenSettingIntColor(ColorIndex.GREEN, green);
+        if (hexValue != null) {
+            replaceSpecificHexColorValueWhenSettingIntColor(ColorIndex.GREEN, green);
+        }
         this.green = green;
     }
 
@@ -43,7 +47,9 @@ public class Color {
         if (isNotCorrectIntColorValue(blue)) {
             throw new IllegalArgumentException("Le paramètre pour la couleur bleue n'est pas correct");
         }
-        replaceSpecificHexColorValueWhenSettingIntColor(ColorIndex.BLUE, blue);
+        if (hexValue != null) {
+            replaceSpecificHexColorValueWhenSettingIntColor(ColorIndex.BLUE, blue);
+        }
         this.blue = blue;
     }
 
@@ -52,8 +58,8 @@ public class Color {
     }
 
     public void setHexValue(String hexValue) {
-        if (isNotCorrectHexaDecimalString(hexValue)) {
-            throw new IllegalArgumentException("La chaîne de caractère n'est pas une couleur hexadécimal");
+        if (isNotCorrectHexaDecimalString(hexValue) || hexValue == null) {
+            throw new IllegalArgumentException("La chaîne de caractère n'est pas une couleur hexadécimale");
         }
         this.hexValue = hexValue;
         this.red = Integer.valueOf(hexValue.substring(1, 3), 16 );
@@ -67,29 +73,17 @@ public class Color {
     private String hexValue;
 
     public Color(int pRed, int pGreen, int pBlue) {
-        if (isNotCorrectIntColorValue(pRed)) {
-            throw new IllegalArgumentException("Le paramètre pour la couleur rouge n'est pas correct");
-        }
-        if (isNotCorrectIntColorValue(pGreen)) {
-            throw new IllegalArgumentException("Le paramètre pour la couleur verte n'est pas correct");
-        }
-        if (isNotCorrectIntColorValue(pBlue)) {
-            throw new IllegalArgumentException("Le paramètre pour la couleur bleue n'est pas correct");
-        }
-        this.red = pRed;
-        this.green = pGreen;
-        this.blue = pBlue;
-        this.hexValue = String.format("#%02x%02x%02x", pRed, pGreen, pBlue).toUpperCase(Locale.ROOT);
+        setRed(pRed);
+        setGreen(pGreen);
+        setBlue(pBlue);
+        setHexValue(String.format("#%02x%02x%02x", pRed, pGreen, pBlue).toUpperCase(Locale.ROOT));
     }
 
     public Color (String hexValue) {
-        if (isNotCorrectHexaDecimalString(hexValue)) {
-            throw new IllegalArgumentException("La chaîne de caractère n'est pas une couleur hexadécimale");
-        }
-        this.hexValue = hexValue;
-        this.red = Integer.valueOf(hexValue.substring(1, 3), 16 );
-        this.green = Integer.valueOf(hexValue.substring(3, 5), 16 );
-        this.blue = Integer.valueOf(hexValue.substring(5, 7), 16 );
+        setHexValue(hexValue);
+        setRed(Integer.valueOf(hexValue.substring(1, 3), 16 ));
+        setGreen(Integer.valueOf(hexValue.substring(3, 5), 16 ));
+        setBlue(Integer.valueOf(hexValue.substring(5, 7), 16 ));
     }
 
     private boolean isNotCorrectIntColorValue(int pIntColorValue) {
@@ -106,7 +100,7 @@ public class Color {
     }
 
     private void replaceSpecificHexColorValueWhenSettingIntColor(ColorIndex color, int newColorIntValue) {
-        String newStringPart = Integer.toHexString(newColorIntValue);
+        String newStringPart = Integer.toHexString(newColorIntValue).toUpperCase(Locale.ROOT);
         switch (color) {
             case RED:
                 hexValue = "#" + newStringPart + hexValue.substring(3, 7);

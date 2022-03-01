@@ -38,10 +38,27 @@ public class ColorTest {
     }
 
     @Test
-    public void should_generate_exception_from_incorrect_rgb(){
-        assertThrows(IllegalArgumentException.class, () ->
+    public void should_generate_exception_from_incorrect_red_parameter(){
+        IllegalArgumentException thrown = assertThrows(IllegalArgumentException.class, () ->
                 new Color(287,15,255)
         );
+        assertEquals("Le paramètre pour la couleur rouge n'est pas correct", thrown.getMessage());
+    }
+
+    @Test
+    public void should_generate_exception_from_incorrect_green_parameter(){
+        IllegalArgumentException thrown = assertThrows(IllegalArgumentException.class, () ->
+                new Color(120,-78,255)
+        );
+        assertEquals("Le paramètre pour la couleur verte n'est pas correct", thrown.getMessage());
+    }
+
+    @Test
+    public void should_generate_exception_from_incorrect_blue_parameter(){
+        IllegalArgumentException thrown = assertThrows(IllegalArgumentException.class, () ->
+                new Color(14,0,256)
+        );
+        assertEquals("Le paramètre pour la couleur bleue n'est pas correct", thrown.getMessage());
     }
 
     /* ----------------------------- TEST HEX CONSTRUCTOR ----------------------------- */
@@ -60,9 +77,10 @@ public class ColorTest {
 
     @Test
     public void should_generate_exception_from_incorrect_hex_value(){
-        assertThrows(IllegalArgumentException.class, () ->
+        IllegalArgumentException thrown = assertThrows(IllegalArgumentException.class, () ->
             new Color("125454azeaze")
         );
+        assertEquals("La chaîne de caractère n'est pas une couleur hexadécimale", thrown.getMessage());
     }
 
 
@@ -77,9 +95,10 @@ public class ColorTest {
 
     @Test
     public void should_throw_illegal_argument_exception_when_set_red_int() {
-        assertThrows(IllegalArgumentException.class, () ->
+        IllegalArgumentException thrown = assertThrows(IllegalArgumentException.class, () ->
                 rgbColorTest.setRed(-87)
         );
+        assertEquals("Le paramètre pour la couleur rouge n'est pas correct", thrown.getMessage());
     }
 
     @Test
@@ -91,9 +110,10 @@ public class ColorTest {
 
     @Test
     public void should_throw_illegal_argument_exception_when_set_green_int() {
-        assertThrows(IllegalArgumentException.class, () ->
+        IllegalArgumentException thrown = assertThrows(IllegalArgumentException.class, () ->
                 rgbColorTest.setGreen(-87)
         );
+        assertEquals("Le paramètre pour la couleur verte n'est pas correct", thrown.getMessage());
     }
 
     @Test
@@ -105,9 +125,10 @@ public class ColorTest {
 
     @Test
     public void should_throw_illegal_argument_exception_when_set_blue_int() {
-        assertThrows(IllegalArgumentException.class, () ->
+        IllegalArgumentException thrown = assertThrows(IllegalArgumentException.class, () ->
                 rgbColorTest.setBlue(-87)
         );
+        assertEquals("Le paramètre pour la couleur bleue n'est pas correct", thrown.getMessage());
     }
 
     @Test
