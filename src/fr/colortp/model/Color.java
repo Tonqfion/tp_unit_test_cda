@@ -19,9 +19,7 @@ public class Color {
         if (isNotCorrectIntColorValue(red)) {
             throw new IllegalArgumentException("Le paramètre pour la couleur rouge n'est pas correct");
         }
-        if (hexValue != null) {
-            replaceSpecificHexColorValueWhenSettingIntColor(ColorIndex.RED, red);
-        }
+        fillHexValueWithColorInt(ColorIndex.RED, red);
         this.red = red;
     }
 
@@ -33,9 +31,7 @@ public class Color {
         if (isNotCorrectIntColorValue(green)) {
             throw new IllegalArgumentException("Le paramètre pour la couleur verte n'est pas correct");
         }
-        if (hexValue != null) {
-            replaceSpecificHexColorValueWhenSettingIntColor(ColorIndex.GREEN, green);
-        }
+        fillHexValueWithColorInt(ColorIndex.GREEN, green);
         this.green = green;
     }
 
@@ -47,21 +43,19 @@ public class Color {
         if (isNotCorrectIntColorValue(blue)) {
             throw new IllegalArgumentException("Le paramètre pour la couleur bleue n'est pas correct");
         }
-        if (hexValue != null) {
-            replaceSpecificHexColorValueWhenSettingIntColor(ColorIndex.BLUE, blue);
-        }
+        fillHexValueWithColorInt(ColorIndex.BLUE, blue);
         this.blue = blue;
     }
 
     public String getHexValue() {
-        return hexValue;
+        return String.valueOf(hexValue);
     }
 
     public void setHexValue(String hexValue) {
-        if (isNotCorrectHexaDecimalString(hexValue) || hexValue == null) {
+        if (isNotCorrectHexaDecimalString(hexValue)) {
             throw new IllegalArgumentException("La chaîne de caractère n'est pas une couleur hexadécimale");
         }
-        this.hexValue = hexValue;
+        this.hexValue = hexValue.toCharArray();
         this.red = Integer.valueOf(hexValue.substring(1, 3), 16 );
         this.green = Integer.valueOf(hexValue.substring(3, 5), 16 );
         this.blue = Integer.valueOf(hexValue.substring(5, 7), 16 );
@@ -70,20 +64,17 @@ public class Color {
     private int red;
     private int green;
     private int blue;
-    private String hexValue;
+    private char[] hexValue = new char[7];
 
     public Color(int pRed, int pGreen, int pBlue) {
         setRed(pRed);
         setGreen(pGreen);
         setBlue(pBlue);
-        setHexValue(String.format("#%02x%02x%02x", pRed, pGreen, pBlue).toUpperCase(Locale.ROOT));
+        hexValue[0] = '#';
     }
 
-    public Color (String hexValue) {
+    public Color(String hexValue) {
         setHexValue(hexValue);
-        setRed(Integer.valueOf(hexValue.substring(1, 3), 16 ));
-        setGreen(Integer.valueOf(hexValue.substring(3, 5), 16 ));
-        setBlue(Integer.valueOf(hexValue.substring(5, 7), 16 ));
     }
 
     private boolean isNotCorrectIntColorValue(int pIntColorValue) {
@@ -91,28 +82,32 @@ public class Color {
     }
 
     private boolean isNotCorrectHexaDecimalString(String pHexValue) {
-        return !Pattern.compile("#([0-9A-F]{3}|[0-9A-F]{6}|[0-9A-F]{8})").matcher(pHexValue).matches();
+        return pHexValue == null || !Pattern.compile("#([0-9A-F]{3}|[0-9A-F]{6}|[0-9A-F]{8})").matcher(pHexValue).matches();
     }
 
     @Override
     public String toString() {
-        return "[value="+ hexValue +", r=" + red + ", g=" + green + ", b=" + blue + "]";
+        return "[value="+ getHexValue() +", r=" + red + ", g=" + green + ", b=" + blue + "]";
     }
 
-    private void replaceSpecificHexColorValueWhenSettingIntColor(ColorIndex color, int newColorIntValue) {
+    private void fillHexValueWithColorInt(ColorIndex colorType, int newColorIntValue) {
         String newStringPart = Integer.toHexString(newColorIntValue).toUpperCase(Locale.ROOT);
-        switch (color) {
+        if (newStringPart.length() == 1) {
+            newStringPart = "0" + newStringPart;
+        }
+        switch (colorType) {
             case RED:
-                hexValue = "#" + newStringPart + hexValue.substring(3, 7);
+                hexValue[1] = newStringPart.charAt(0);
+                hexValue[2] = newStringPart.charAt(1);
                 break;
             case GREEN:
-                hexValue = hexValue.substring(0, 3) +  newStringPart + hexValue.substring(5, 7);
+                hexValue[3] = newStringPart.charAt(0);
+                hexValue[4] = newStringPart.charAt(1);
                 break;
             case BLUE:
-                hexValue = hexValue.substring(0, 5) + newStringPart;
+                hexValue[5] = newStringPart.charAt(0);
+                hexValue[6] = newStringPart.charAt(1);
                 break;
         }
-
-
     }
 }
