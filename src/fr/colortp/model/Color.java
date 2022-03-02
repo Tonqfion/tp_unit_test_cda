@@ -5,60 +5,17 @@ import java.util.regex.Pattern;
 
 public class Color {
 
+    private static final int MAX_INT_VALUE = 255;
+    private static final int MIN_INT_VALUE = 0;
+    private static final String RED_STRING = "red";
+    private static final String GREEN_STRING = "green";
+    private static final String BLUE_STRING = "blue";
+    private static final Pattern HEXA_REGEX = Pattern.compile("#([0-9A-F]{3}|[0-9A-F]{6}|[0-9A-F]{8})");
+
     enum ColorIndex {
         RED,
         GREEN,
         BLUE,
-    }
-
-    public int getRed() {
-        return red;
-    }
-
-    public void setRed(int red) {
-        if (isNotCorrectIntColorValue(red)) {
-            throw new IllegalArgumentException("Le paramètre pour la couleur rouge n'est pas correct");
-        }
-        fillHexValueWithColorInt(ColorIndex.RED, red);
-        this.red = red;
-    }
-
-    public int getGreen() {
-        return green;
-    }
-
-    public void setGreen(int green) {
-        if (isNotCorrectIntColorValue(green)) {
-            throw new IllegalArgumentException("Le paramètre pour la couleur verte n'est pas correct");
-        }
-        fillHexValueWithColorInt(ColorIndex.GREEN, green);
-        this.green = green;
-    }
-
-    public int getBlue() {
-        return blue;
-    }
-
-    public void setBlue(int blue) {
-        if (isNotCorrectIntColorValue(blue)) {
-            throw new IllegalArgumentException("Le paramètre pour la couleur bleue n'est pas correct");
-        }
-        fillHexValueWithColorInt(ColorIndex.BLUE, blue);
-        this.blue = blue;
-    }
-
-    public String getHexValue() {
-        return String.valueOf(hexValue);
-    }
-
-    public void setHexValue(String hexValue) {
-        if (isNotCorrectHexaDecimalString(hexValue)) {
-            throw new IllegalArgumentException("La chaîne de caractère n'est pas une couleur hexadécimale");
-        }
-        this.hexValue = hexValue.toCharArray();
-        this.red = Integer.valueOf(hexValue.substring(1, 3), 16 );
-        this.green = Integer.valueOf(hexValue.substring(3, 5), 16 );
-        this.blue = Integer.valueOf(hexValue.substring(5, 7), 16 );
     }
 
     private int red;
@@ -77,12 +34,62 @@ public class Color {
         setHexValue(hexValue);
     }
 
-    private boolean isNotCorrectIntColorValue(int pIntColorValue) {
-        return pIntColorValue < 0 || pIntColorValue > 255;
+    private String errorMsgForSetter(String color) {
+        return String.format("Le paramètre pour la couleur %s n'est pas correct", color);
+    }
+
+    public int getRed() {
+        return red;
+    }
+
+    public void setRed(int red) {
+        checkIntColorValue(red, RED_STRING);
+        fillHexValueWithColorInt(ColorIndex.RED, red);
+        this.red = red;
+    }
+
+    public int getGreen() {
+        return green;
+    }
+
+    public void setGreen(int green) {
+        checkIntColorValue(green, GREEN_STRING);
+        fillHexValueWithColorInt(ColorIndex.GREEN, green);
+        this.green = green;
+    }
+
+    public int getBlue() {
+        return blue;
+    }
+
+    public void setBlue(int blue) {
+        checkIntColorValue(blue, BLUE_STRING);
+        fillHexValueWithColorInt(ColorIndex.BLUE, blue);
+        this.blue = blue;
+    }
+
+    public String getHexValue() {
+        return String.valueOf(hexValue);
+    }
+
+    public void setHexValue(String hexValue) {
+        if (isNotCorrectHexaDecimalString(hexValue)) {
+            throw new IllegalArgumentException("La chaîne de caractère n'est pas une couleur hexadécimale");
+        }
+        this.hexValue = hexValue.toCharArray();
+        this.red = Integer.valueOf(hexValue.substring(1, 3), 16 );
+        this.green = Integer.valueOf(hexValue.substring(3, 5), 16 );
+        this.blue = Integer.valueOf(hexValue.substring(5, 7), 16 );
+    }
+
+    private void checkIntColorValue(int pIntColorValue, String colorString) {
+        if (pIntColorValue < MIN_INT_VALUE || pIntColorValue > MAX_INT_VALUE) {
+            throw new IllegalArgumentException(errorMsgForSetter(colorString));
+        }
     }
 
     private boolean isNotCorrectHexaDecimalString(String pHexValue) {
-        return pHexValue == null || !Pattern.compile("#([0-9A-F]{3}|[0-9A-F]{6}|[0-9A-F]{8})").matcher(pHexValue).matches();
+        return pHexValue == null || !HEXA_REGEX.matcher(pHexValue).matches();
     }
 
     @Override
