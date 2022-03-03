@@ -10,7 +10,7 @@ public class Color {
     private static final String RED_STRING = "red";
     private static final String GREEN_STRING = "green";
     private static final String BLUE_STRING = "blue";
-    private static final Pattern HEXA_REGEX = Pattern.compile("#([0-9A-F]{3}|[0-9A-F]{6}|[0-9A-F]{8})");
+    private static final Pattern HEX_REGEX = Pattern.compile("#([0-9A-F]{3}|[0-9A-F]{6}|[0-9A-F]{8})");
 
     enum ColorIndex {
         RED,
@@ -89,7 +89,7 @@ public class Color {
     }
 
     private boolean isNotCorrectHexaDecimalString(String pHexValue) {
-        return pHexValue == null || !HEXA_REGEX.matcher(pHexValue).matches();
+        return pHexValue == null || !HEX_REGEX.matcher(pHexValue).matches();
     }
 
     @Override
@@ -99,9 +99,11 @@ public class Color {
 
     private void fillHexValueWithColorInt(ColorIndex colorType, int newColorIntValue) {
         String newStringPart = Integer.toHexString(newColorIntValue).toUpperCase(Locale.ROOT);
+
         if (newStringPart.length() == 1) {
-            newStringPart = "0" + newStringPart;
+            newStringPart = '0' + newStringPart;
         }
+
         switch (colorType) {
             case RED:
                 hexValue[1] = newStringPart.charAt(0);
